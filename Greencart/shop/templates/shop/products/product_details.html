@@ -1,0 +1,184 @@
+{% extends 'shop/layout/main.html' %}
+{% block title %}GreenCart | Awesome Products{% endblock title %}
+{% block content %}
+
+<!-- Product Detail Section -->
+<section class="bg-light py-4" style="margin-top: 3rem;">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 mb-3">
+                <h4>{{ products }} Details</h4>
+                <hr style="border-color: rgb(255, 255, 223);">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'collections' products.category.name %}">Collections</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ products }}</li>
+                    </ol>
+                </nav>
+                {% include 'shop/inc/message.html' %}
+            </div>
+
+            <!-- Product Image -->
+            <div class="col-lg-4 col-md-5 col-sm-12 text-center mb-4 pic-box">
+                {% if products.trending %}
+                    <div class="badge bg-danger position-absolute" style="top: 10px; right: 60px;">HOT</div>
+                {% endif %}
+                <img src="{{ products.product_image.url }}" class="img-fluid rounded shadow-sm" alt="Product" style="max-height: 280px; object-fit: cover;">
+            </div>
+
+            <!-- Product Details -->
+            <div class="col-lg-8 col-md-7 col-sm-12">
+                <h5 class="text-success">{{ products|upper }}</h5>
+                <p><strong>Vendor:</strong> {{ products.vender }}</p>
+                <p class="bold text-muted">{{ products.description }}</p>
+                <h5 class="text-danger">₹ <s>{{ products.original_price|floatformat:2 }}</s></h5>
+                <h4 class="text-primary">₹ {{ products.selling_price|floatformat:2 }}</h4>
+
+                {% if products.quantity > 0 %}
+                <input type="hidden" value="{{ products.id }}" id="pid">
+
+                <div class="my-3" style="max-width: 180px;">
+                    <div class="input-group">
+                        <button class="input-group-text bg-success text-white" id="btnMinus"><i class="fa fa-minus"></i></button>
+                        <input type="text" name="qty" id="txtQty" value="1" class="form-control text-center">
+                        <button class="input-group-text bg-success text-white" id="btnPlus"><i class="fa fa-plus"></i></button>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{% url 'place_order' products.id %}" class="btn btn-success"><i class="fa fa-bolt"></i> Buy Now</a>
+                    <button class="btn btn-primary" id="btnCart"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
+                    <button class="btn btn-danger" id="btnfav"><i class="fa fa-heart"></i></button>
+                </div>
+                {% else %}
+                    <div class="my-3">
+                        <button class="btn btn-secondary" disabled><i class="fa fa-times-circle"></i> Out of Stock</button>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Review Section -->
+<section class="bg-white py-4 border-top">
+    <div class="container">
+        <h4 class="mb-4">Write a Review</h4>
+        {% if request.user.is_authenticated %}
+        <form method="POST" class="mb-4">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label>Rating (1–5)</label>
+                {{ form.rating }}
+            </div>
+            <div class="mb-3">
+                <label>Comment</label>
+                {{ form.comment }}
+            </div>
+            <button class="btn btn-success">Submit Review</button>
+        </form>
+        {% else %}
+            <p>Please <a href="{% url 'login' %}">login</a> to write a review.</p>
+        {% endif %}
+
+        <hr>
+        <h4 class="mt-4 mb-3">Customer Reviews</h4>
+        {% for review in reviews %}
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <strong>{{ review.user.username }}</strong>
+                    <small class="text-muted">{{ review.created_at|date:"M d, Y H:i" }}</small>
+                </div>
+                <div class="mb-1 text-warning" style="font-size: 1rem;">
+                    {% for i in "12345"|slice:":review.rating" %}★{% endfor %}
+                    <!-- {% for i in "12345"|slice:"review.rating:" %}<span class="text-secondary">★</span>{% endfor %} -->
+                </div>
+                <p class="text-dark">{{ review.comment }}</p>
+            </div>
+        </div>
+        {% empty %}
+            <p>No reviews yet.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const btnPlus = document.getElementById("btnPlus");
+    const btnMinus = document.getElementById("btnMinus");
+    const txtQty = document.getElementById("txtQty");
+    const pid = document.getElementById("pid");
+    const btnCart = document.getElementById("btnCart");
+    const btnfav = document.getElementById("btnfav");
+
+    btnPlus.addEventListener("click", function () {
+        let qty = parseInt(txtQty.value, 10);
+        qty = isNaN(qty) ? 0 : qty;
+        if (qty < 10) {
+            qty++;
+            txtQty.value = qty;
+        }
+    });
+
+    btnMinus.addEventListener("click", function () {
+        let qty = parseInt(txtQty.value, 10);
+        qty = isNaN(qty) ? 0 : qty;
+        if (qty > 1) {
+            qty--;
+            txtQty.value = qty;
+        }
+    });
+
+    btnCart.addEventListener("click", function () {
+        let qty = parseInt(txtQty.value, 10);
+        qty = isNaN(qty) ? 0 : qty;
+        if (qty > 0) {
+            let postObj = {
+                'product_qty': qty,
+                'pid': pid.value
+            }
+            fetch("/addtocart", {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                body: JSON.stringify(postObj)
+            }).then(response => {
+                return response.json();
+            }).then(data => {
+                alert(data['status']);
+            });
+        } else {
+            alert('Please enter a valid quantity');
+        }
+    });
+
+    btnfav.addEventListener("click", function () {
+        let postObj = {
+            'pid': pid.value
+        }
+        fetch("/fav", {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: JSON.stringify(postObj)
+        }).then(response => {
+            return response.json();
+        }).then(data => {
+            alert(data['status']);
+        });
+    });
+});
+</script>
+{% endblock content %}
