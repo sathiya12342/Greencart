@@ -2,8 +2,9 @@
 html {
   font-size: 14px;
 }
+/* Default Light Theme */
 body {
-    font-family: 'Noto Sans', sans-serif;
+  font-family: 'Noto Sans', sans-serif;
 }
 .product-card:hover {
    transform: scale(1.03);
@@ -44,8 +45,9 @@ h4{
 }
 /* Product Card Styling */
 .card {
-  background-color: #e4e2d2;
+  background-color: #f2fccd;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 2px solid #9aff57;
   border-radius: 12px;
   overflow: hidden;
 }
@@ -59,6 +61,7 @@ h4{
 /* Image Styling */
 .img1 {
   transition: transform 0.3s ease;
+  object-fit: cover;
 }
 
 .img1:hover {
@@ -97,7 +100,7 @@ h4{
 }
 
 .new_price {
-  color: #28a745;
+  color: #25ee57;
   font-weight: bold;
 }
 .text-primary{
@@ -110,7 +113,7 @@ h4{
 }
 
 .card-title:hover {
-  color: #198754;
+  color: #17aa65;
 }
 
 .old_price {
@@ -120,7 +123,7 @@ h4{
 
 .new_price {
   font-weight: bold;
-  background-color: rgb(13, 170, 13);
+  background-color: rgb(29, 212, 29);
   color: white;
   padding: 2px;
   border-radius: 5px;
