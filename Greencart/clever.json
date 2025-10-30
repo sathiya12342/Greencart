@@ -1,0 +1,13 @@
+{
+  "apps": [
+    {
+      "name": "Greencart",
+      "env": {
+        "DJANGO_SETTINGS_MODULE": "Greencart.settings"
+      },
+      "build": {
+        "cmd": "python manage.py collectstatic --noinput"
+      }
+    }
+  ]
+}
