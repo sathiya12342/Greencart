@@ -1,0 +1,32 @@
+{% extends 'shop/layout/main.html' %}
+{% block title %}Verify OTP | GreenCart{% endblock title %}
+
+{% block content %}
+<div class="container mt-5 pt-5">
+    <div class="row justify-content-start">
+        <div class="col-md-4">
+            <h4 class="mb-4 text-success">OTP Verification</h4>
+
+            {% include 'shop/inc/message.html' %}
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="otp" class="form-label">Enter the OTP sent to your phone/email:</label>
+                    <input type="text" name="otp" id="otp" class="form-control" placeholder="4-digit OTP" maxlength="4" required>
+                </div>
+                <div class="d-grid mb-3">
+                    <button class="btn btn-success" type="submit">
+                        <i class="fa fa-check-circle me-1"></i> Confirm Order
+                    </button>
+                </div>
+            </form>
+
+            <div class="text-start">
+                <small class="text-muted">Didn't receive the OTP?</small><br>
+                <a href="{% url 'send_otp' %}" class="btn btn-link p-3">Resend OTP</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

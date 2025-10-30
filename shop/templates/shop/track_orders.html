@@ -1,0 +1,55 @@
+{% extends 'shop/layout/main.html' %}
+{% block title %}Track Orders | GreenCart{% endblock title %}
+
+{% block content %}
+<div class="container mt-5 py-md-5" style="margin-bottom: 50px;">
+    <h2 class="mb-4 text-success">My Orders</h2>
+
+    {% if orders %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th>Product</th>
+                    <th>Qty</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Ordered On</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>
+                        <strong>{{ order.product.name }}</strong><br>
+                        {# Uncomment below line to show product image #}
+                        {# <img src="{{ order.product.product_image.url }}" alt="{{ order.product.name }}" style="width: 50px; height: 50px;" class="img-thumbnail mt-1"> #}
+                    </td>
+                    <td>{{ order.quantity }}</td>
+                    <td>₹{{ order.total_price }}</td>
+                    <td>
+                        {% if order.status == 'Pending' %}
+                            <span class="badge bg-warning text-dark">Pending</span>
+                        {% elif order.status == 'Shipped' %}
+                            <span class="badge bg-info text-dark">Shipped</span>
+                        {% elif order.status == 'Delivered' %}
+                            <span class="badge bg-success">Delivered</span>
+                        {% elif order.status == 'Cancelled' %}
+                            <span class="badge bg-danger">Cancelled</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{{ order.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ order.ordered_date|date:"d M Y, h:i A" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info mt-4">
+        <strong>No orders found.</strong> Start shopping now!
+    </div>
+    {% endif %}
+</div>
+{% endblock content %}

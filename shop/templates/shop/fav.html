@@ -1,0 +1,54 @@
+{% extends 'shop/layout/main.html' %}
+{% block title %}
+  Favourite | GreenCart
+{% endblock title %}
+
+{% block content %}
+<section class="bg-light py-5 my-5" style="min-height:600px;">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h4 class="mb-4 text-success">❤️ Favourite Items</h4>
+        <hr style="border-color:#ccc;">
+      </div>
+
+      {% if fav %}
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover shadow-sm bg-white">
+          <thead class="table-success text-center">
+            <tr>
+              <th>Image</th>
+              <th>Product Name</th>
+              <th>Price</th>
+              <th>Remove</th>
+            </tr>
+          </thead>
+          <tbody class="text-center align-middle">
+            {% for item in fav %}
+            <tr>
+              <td>
+                <img src="{{ item.product.product_image.url }}" alt="{{ item.product.name }}"
+                     class="img-thumbnail" style="height: 70px; width: 70px;">
+              </td>
+              <td class="text-start">{{ item.product.name }}</td>
+              <td><span class="text-primary fw-bold">₹{{ item.product.selling_price|stringformat:'d' }}</span></td>
+              <td>
+                <a href="{% url 'remove_fav' item.id %}"class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to remove this item?')">
+                   <i class="fa fa-trash"></i> Remove
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="alert alert-warning text-center my-5" role="alert">
+        You haven't added any items to your favourites yet.
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+</section>
+{% endblock content %}

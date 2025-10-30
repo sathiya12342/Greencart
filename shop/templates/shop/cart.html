@@ -1,0 +1,71 @@
+{% extends 'shop/layout/main.html' %}
+{% block title %}
+Cart | GreenCart
+{% endblock title %}
+
+{% block content %}
+<section class="bg-light py-5 my-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h4 class="mb-4 text-success">🛒 Your Cart Items</h4>
+                <hr style="border-color: #cfcfcf;">
+            </div>
+
+            {% if cart %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle text-center shadow-sm bg-white">
+                    <thead class="table-success">
+                        <tr>
+                            <th scope="col">Image</th>
+                            <th scope="col">Product</th>
+                            <th scope="col">Unit Price</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart %}
+                        <tr>
+                            <td>
+                                <img src="{{ item.product.product_image.url }}" alt="{{ item.product.name }}" class="img-thumbnail" style="height: 75px; width: 75px;">
+                            </td>
+                            <td class="text-start">{{ item.product.name }}</td>
+                            <td>₹{{ item.product.selling_price|stringformat:'d' }}</td>
+                            <td>{{ item.product_qty }}</td>
+                            <td class="amt fw-bold">₹{{ item.total_cost|stringformat:'d' }}</td>
+                            <td>
+                                <a href="{% url 'remove_cart' item.id %}" onclick="return confirm('Are you sure?')" class="btn btn-sm btn-outline-danger">
+                                    <i class="fa fa-trash"></i> Remove
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        <tr class="table-light fw-bold">
+                            <td colspan="4" class="text-end">Total Amount</td>
+                            <td id="net" class="text-success fs-5">₹0</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+                <div class="alert alert-warning text-center" role="alert">
+                    Your cart is currently empty.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- JavaScript to calculate net total -->
+<script>
+    const nodes = document.querySelectorAll('.amt');
+    const arr = Array.from(nodes);
+    const res = arr.reduce((acc, curr) => {
+        return acc += Number(curr.textContent.replace('₹', ''))
+    }, 0);
+    document.getElementById("net").innerHTML = "₹" + res;
+</script>
+{% endblock content %}

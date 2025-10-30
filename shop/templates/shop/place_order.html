@@ -1,0 +1,73 @@
+{% extends 'shop/layout/main.html' %}
+{% block title %}
+place_order | GreenCart
+{% endblock title %}
+{% block content %}
+ <div class="container mt-5 py-4">
+    <h2 class="mb-4">Place Order: {{ product.name }}</h2>
+    
+    <div class="row">
+        <!-- Product Summary -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm" style="width: 19rem; height: 31rem;">
+                <img class="img3" src="{{ product.product_image.url }}" class="card-img-top" alt="{{ product.name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.description }}</p>
+                    <p><strong>Price:</strong> ₹<span id="unit-price">{{ product.selling_price }}</span></p>
+                    <p><strong>Available Stock:</strong> {{ product.quantity }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Form -->
+        <div class="col-md-6">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label><strong>Quantity:</strong></label>
+                    <input type="number" name="quantity" id="quantity" value="1" min="1" required class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label><strong>Total Amount:</strong></label>
+                    <input type="text" id="total-amount" class="form-control" readonly>
+                </div>
+                <div class="mb-3">
+                    <label><strong>Address:</strong></label>
+                    <textarea name="address" class="form-control" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label><strong>Payment Method:</strong></label>
+                    <select name="payment_method" class="form-control" required>
+                        <option value="">--Select--</option>
+                        <option value="COD">Cash on Delivery</option>
+                        <option value="Online">Online Payment</option>
+                        <option value="UPI">UPI</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label><strong>Delivery Instructions (optional):</strong></label>
+                    <textarea name="instructions" class="form-control" placeholder="e.g. Leave at the gate..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-success">Place Order</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript to auto-calculate total -->
+<script>
+    const quantityInput = document.getElementById('quantity');
+    const unitPrice = parseFloat(document.getElementById('unit-price').innerText);
+    const totalAmount = document.getElementById('total-amount');
+
+    function calculateTotal() {
+        const qty = parseInt(quantityInput.value) || 1;
+        totalAmount.value = "₹" + (qty * unitPrice).toFixed(2);
+    }
+
+    quantityInput.addEventListener('input', calculateTotal);
+    window.addEventListener('load', calculateTotal);
+</script>
+
+{% endblock content %}

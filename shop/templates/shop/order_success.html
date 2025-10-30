@@ -1,0 +1,11 @@
+{% extends 'shop/layout/main.html' %}
+{% block title %}
+Order_Success | GreenCart
+{% endblock title %}
+{% block content %}
+ <div class="container mt-4 py-5" style="margin-bottom: 90px;">
+    <h2>Order Successful ✅</h2>
+    <p>Thank you for shopping with us!</p>
+    <a href="{% url 'home' %}" class="btn btn-primary">Go Home</a>
+  </div>
+{% endblock content %}
