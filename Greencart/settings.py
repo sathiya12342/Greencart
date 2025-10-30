@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-import os
+
 from pathlib import Path
 
 
@@ -26,21 +26,19 @@ SECRET_KEY = 'django-insecure-0%s(ny-x52svs0ur66-&$z6m)c05&s9iwve0j73i^0&tqx!k_y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['app-1a7e02d1-7f39-4e30-a011-8970db904177.cleverapps.io', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = []
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'cloudinary_storage',
-    'django.contrib.staticfiles',
-    'cloudinary',
     'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.staticfiles',
     'shop',
 
 ]
@@ -53,7 +51,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', 
 ]
 
 ROOT_URLCONF = 'Greencart.urls'
@@ -82,24 +79,14 @@ WSGI_APPLICATION = 'Greencart.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'b6bjterazoy9xhyvqzmm',
-        'USER': 'uimdfca2m9be7aqg',
-        'PASSWORD': '2l9h1RL6ZifiW6V58JV6',
-        'HOST': 'b6bjterazoy9xhyvqzmm-mysql.services.clever-cloud.com',
-        'PORT': '3306',
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
+        'NAME': 'django_shop',
+        'HOST': 'localhost',
+        'USER':'root',
+        'PASSWORD':'Bepositive@1',
+        'POST':'3306'
     }
 }
 
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'root',
-    'API_KEY': '887315172335248',
-    'API_SECRET': '9JDhVjogZ4ID8kc1v1SUGNuDsI8', 
-}
-
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -136,19 +123,18 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media upload 2025 06')
+MEDIA_URL = '/images/'
+MEDIA_ROOT = BASE_DIR / 'static'
 
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
 
 
 
