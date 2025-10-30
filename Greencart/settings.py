@@ -79,15 +79,16 @@ WSGI_APPLICATION = 'Greencart.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django_shop',
-        'HOST': 'localhost',
-        'USER':'root',
-        'PASSWORD':'Bepositive@1',
-        'POST':'3306'
+        'NAME': 'b6bjterazoy9xhyvqzmm',
+        'USER': 'uimdfca2m9be7aqg',
+        'PASSWORD': '2l9h1RL6ZifiW6V58JV6',
+        'HOST': 'b6bjterazoy9xhyvqzmm-mysql.services.clever-cloud.com',
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
     }
 }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
